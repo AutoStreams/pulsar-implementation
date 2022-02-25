@@ -1,0 +1,3 @@
+[submodule "streams-data-provider"]
+	path = streams-data-provider
+	url = git@github.com:Klungerbo/streams-data-provider.git
