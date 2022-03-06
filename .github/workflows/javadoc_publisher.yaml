@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master, feature/javadoc ]
   pull_request:
-    branches: [ master, feature/javadoc ]
+    branches: [ master ]
 
 jobs:
   publish:
