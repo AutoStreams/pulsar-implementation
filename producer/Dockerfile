@@ -8,6 +8,22 @@ RUN mvn -f /home/app/pom.xml clean package
 
 FROM gcr.io/distroless/java17-debian11
 COPY --from=build /home/app/target/pulsar-producer-1.0-SNAPSHOT-jar-with-dependencies.jar /usr/local/lib/pulsar-producer.jar
-ENV PULSAR_BROKER_URL='broker-1:6650,broker-2:6651'
 EXPOSE 8992
+
+ENV PULSAR_BROKER_URL='broker-1:6650,broker-2:6651'
+
+ENV TOPIC_NAME='Testtopic'
+ENV PRODUCER_NAME='PrototypeProducer'
+ENV SEND_TIMEOUT_MS=30000
+ENV BLOCK_IF_QUEUE_FULL=false
+ENV MAX_PENDING_MESSAGES=1000
+ENV MAX_PENDING_MESSAGES_ACROSS_PARTITIONS=50000
+ENV MESSAGE_ROUTING_MODE=RoundRobinPartition
+ENV HASHING_SCHEME=JavaStringHash
+ENV CRYPTO_FAILURE_ACTION=FAIL
+ENV BATCHING_MAX_PUBLISH_DELAY_MICROS=1
+ENV BATCHING_MAX_MESSAGES=1000
+ENV BATCHING_ENABLED=true
+ENV COMPRESSION_TYPE=NONE
+
 ENTRYPOINT ["java", "-jar", "/usr/local/lib/pulsar-producer.jar"]
