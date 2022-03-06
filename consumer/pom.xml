@@ -13,7 +13,7 @@
     <groupId>com.klungerbo</groupId>
     <artifactId>pulsar-consumer</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>pulsar-producer</name>
+    <name>pulsar-consumer</name>
 
     <repositories>
         <repository>
