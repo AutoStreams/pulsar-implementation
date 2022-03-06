@@ -1,10 +1,10 @@
-/*
+/**
 * Code adapted from https://www.baeldung.com/apache-pulsar
 */
 
 package com.klungerbo.streams.pulsar;
 
-import com.klungerbo.streams.pulsar.utils.FileUtils;
+import com.klungerbo.streams.utils.fileutils.FileUtils;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;

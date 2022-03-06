@@ -1,7 +1,12 @@
+/**
+ * Code adapted from:
+ * https://pulsar.apache.org/docs/en/client-libraries-java/
+ */
+
 package com.klungerbo.streams.pulsar;
 
-import com.klungerbo.streams.pulsar.utils.FileUtils;
 import com.klungerbo.streams.utils.datareceiver.StreamsServer;
+import com.klungerbo.streams.utils.fileutils.FileUtils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -42,7 +47,6 @@ public class ConsumerMaster implements StreamsServer<String> {
                 e.printStackTrace();
             }
         }
-
         for (int i = 0; i < consumerCount; i++) {
             ConsumerWorker cw = new ConsumerWorker();
             workers.add(cw);

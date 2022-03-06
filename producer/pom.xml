@@ -32,7 +32,7 @@
         <dependency>
             <groupId>com.github.AutoStreams</groupId>
             <artifactId>streams-prototype-utils</artifactId>
-            <version>-SNAPSHOT</version>
+            <version>feature~file_utils-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.pulsar</groupId>

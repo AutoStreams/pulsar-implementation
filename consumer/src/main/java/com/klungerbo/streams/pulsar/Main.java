@@ -15,22 +15,29 @@ import org.slf4j.LoggerFactory;
  * @since 1.0
  */
 public class Main {
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
     /**
      * Main function, entry point for consumer program.
      *
      * @param args optional arguments
      */
     public static void main(String[] args) {
-        final Logger logger = LoggerFactory.getLogger(Main.class);
-        ConsumerMaster consumerMaster;
+        int consumerCount = getConsumerCount(args);
+
+        ConsumerMaster consumerMaster = new ConsumerMaster();
+        consumerMaster.init(consumerCount);
+        consumerMaster.startWorkers();
+    }
+
+    private static int getConsumerCount(String[] args) {
+        int count = 0;
         Options options = new Options();
         CommandLineParser parser = new DefaultParser();
-        int consumerCount = 0;
         options.addOption("w", true, "amount of workers");
         try {
             CommandLine cmd = parser.parse(options, args);
             if (cmd.hasOption('w')) {
-                consumerCount = Integer.parseInt(cmd.getOptionValue('w'));
+                count = Integer.parseInt(cmd.getOptionValue('w'));
             }
         } catch (ParseException pe) {
             logger.error("Could not parse commandline arguments");
@@ -39,9 +46,6 @@ public class Main {
             logger.error("Provided worker argument is not a number");
             ne.printStackTrace();
         }
-
-        consumerMaster = new ConsumerMaster();
-        consumerMaster.init(consumerCount);
-        consumerMaster.startWorkers();
+        return count;
     }
 }

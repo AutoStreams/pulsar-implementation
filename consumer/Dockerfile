@@ -8,5 +8,5 @@ ENV TOPIC_NAME = 'Testtopic'
 ENV SUBSCRIPTION_NAME = 'subscription'
 
 FROM gcr.io/distroless/java17-debian11
-COPY --from=build /home/app/target/pulsar-consumer-1.0-SNAPSHOT-jar-with-dependencies.jar /usr/local/lib/data-consumer.jar
+COPY --from=build /home/app/target/pulsar-consumer.jar /usr/local/lib/pulsar-consumer.jar
 ENTRYPOINT ["java", "-jar", "/usr/local/lib/data-consumer.jar"]
