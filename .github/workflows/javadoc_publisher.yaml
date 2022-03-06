@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy JavaDoc 🚀
-        uses: AutoStreams/jvpub@6460004c43b5eb7e699ce3a59eca70d2d261f9f4
+        uses: AutoStreams/jvpub@e5013287ddcca8926a34d40ef83827ae9815e6b7
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           javadoc-branch: gh-pages 
