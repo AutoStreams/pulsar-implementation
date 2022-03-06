@@ -2,7 +2,7 @@ name: Deploy Javadoc
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, feature/javadoc]
   pull_request:
     branches: [ master ]
 
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy JavaDoc 🚀
-        uses: AutoStreams/jvpub@0.2
+        uses: Klungerbo/javadoc-publisher.yml@b36cbbb27da7ba3fe6ef3b7912168db6109e7ab7
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           javadoc-branch: gh-pages 
