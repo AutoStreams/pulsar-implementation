@@ -2,7 +2,7 @@ name: Deploy Javadoc
 
 on:
   push:
-    branches: [ master, feature/javadoc]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
