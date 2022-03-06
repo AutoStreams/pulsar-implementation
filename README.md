@@ -20,14 +20,14 @@ All code and modules should now be available in your local repository.
 **Prerequisites**
 * Make sure you have downloaded [Docker](https://www.docker.com/) on your system.
 * Make sure [Docker Compose](https://docs.docker.com/compose/install/) is installed (Added by default with Docker Desktop for Windows)
-* Set the working directory to the root of this collection directory i.e. **`streams-prototypes/prototype-pulsar/`**
+* Set the working directory to the root of this collection directory i.e. **`prototype-pulsar/`**
 
 To build the docker images, execute the command:
 ```bash
-docker-compose build
+docker compose -f docker-compose.yml -f broker/docker-compose.yml build
 ```
 
 To execute the built images, execute the command:
 ```bash
-docker-compose up
+docker compose -f docker-compose.yml -f broker/docker-compose.yml up
 ```
