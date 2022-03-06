@@ -27,7 +27,7 @@ public class ConsumerWorker implements Runnable {
     private boolean running = false;
     private final Logger logger = LoggerFactory.getLogger(ConsumerWorker.class);
     private static final String CONFIG_NAME = "consumerconfig.properties";
-    private Set<String> topics = new HashSet<>(Arrays.asList("Testtopic"));
+    private Set<String> topics = new HashSet<>();
 
     /**
      * Initializes and prepares the consumer for use.
@@ -70,20 +70,37 @@ public class ConsumerWorker implements Runnable {
      */
     private void createConsumer() throws IOException {
         Properties props = FileUtils.loadConfigFromFile(CONFIG_NAME);
-
+        Map<String, Object> consumerConfigurations = getConsumerPropertiesAsMap(props);
         String host = System.getenv().getOrDefault("PULSAR_BROKER_URL",
-            props.getProperty("pulsar.url", "pulsar://localhost:8080"));
+            props.getProperty("pulsar.url", "pulsar://localhost:6650"));
 
         PulsarClient client = PulsarClient.builder().serviceUrl(host).build();
-
-        Map<String, Object> consumerProperties = new HashMap<>();
-        consumerProperties.put("topicNames", topics);
-        consumerProperties.put("subscriptionName", props.getProperty("subscriptionName",
-            "subscription"));
-
         consumer = client.newConsumer(Schema.STRING)
-            .loadConf(consumerProperties)
+            .loadConf(consumerConfigurations)
             .subscribe();
+    }
+
+    /**
+     * Gets a mapped version of supplied properties for the pulsar consumer. Adds additional
+     * configurations as necessary.
+     *
+     * @param props properties to carry over into the returned map
+     * @return map of all relevant configurations in String-Object pairs
+     */
+    private Map<String, Object> getConsumerPropertiesAsMap(Properties props) {
+        Map<String, Object> consumerProperties = new HashMap<>();
+
+        String topic = System.getenv().getOrDefault("TOPIC_NAME",
+            props.getProperty("pulsar.topic", "Testtopic"));
+        topics.add(topic);
+
+        String subscriptionName = System.getenv().getOrDefault("SUBSCRIPTION_NAME",
+            props.getProperty("pulsar.subscriptionName", "subscription"));
+
+        consumerProperties.put("topicNames", topics);
+        consumerProperties.put("subscriptionName", subscriptionName);
+
+        return consumerProperties;
     }
 
     /**

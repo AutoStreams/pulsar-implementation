@@ -3,6 +3,10 @@ COPY src /home/app/src
 COPY pom.xml /home/app
 RUN mvn -f /home/app/pom.xml clean package
 
+ENV PULSAR_BROKER_URL='broker-1:6650,broker-2:6651'
+ENV TOPIC_NAME = 'Testtopic'
+ENV SUBSCRIPTION_NAME = 'subscription'
+
 FROM gcr.io/distroless/java17-debian11
 COPY --from=build /home/app/target/pulsar-consumer-1.0-SNAPSHOT-jar-with-dependencies.jar /usr/local/lib/data-consumer.jar
 ENTRYPOINT ["java", "-jar", "/usr/local/lib/data-consumer.jar"]
