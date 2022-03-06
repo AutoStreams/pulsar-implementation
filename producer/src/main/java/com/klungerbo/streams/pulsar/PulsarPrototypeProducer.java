@@ -196,6 +196,8 @@ public class PulsarPrototypeProducer implements StreamsServer<String> {
 
     /**
      * Initialize the Pulsar prototype producer.
+     *
+     * @return true if successful, false if else.
      */
     public boolean initialize() {
         Properties configProperties;
