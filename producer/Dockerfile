@@ -7,7 +7,7 @@ COPY pom.xml /home/app
 RUN mvn -f /home/app/pom.xml clean package
 
 FROM gcr.io/distroless/java17-debian11
-COPY --from=build /home/app/target/pulsar-producer-1.0-SNAPSHOT-jar-with-dependencies.jar /usr/local/lib/pulsar-producer.jar
+COPY --from=build /home/app/target/pulsar-producer.jar /usr/local/lib/pulsar-producer.jar
 EXPOSE 8992
 
 ENV PULSAR_BROKER_URL='broker-1:6650,broker-2:6651'
