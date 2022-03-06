@@ -1,8 +1,11 @@
+/*
+* Code adapted from https://www.baeldung.com/apache-pulsar
+*/
+
 package com.klungerbo.streams.pulsar;
 
 import com.klungerbo.streams.pulsar.utils.FileUtils;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -17,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Partially adapted from https://www.baeldung.com/apache-pulsar
+ *  Worker that contains the consumer, receiving data from a broker.
  *
  * @version 1.0
  * @since 1.0
@@ -54,10 +57,10 @@ public class ConsumerWorker implements Runnable {
     /**
      * Attempts to gracefully stop the consumer.
      */
-    public void stop(){
+    public void stop() {
         running = false;
         try {
-        consumer.close();
+            consumer.close();
         } catch (PulsarClientException pce) {
             logger.error("An error occurred while closing the Pulsar consumer");
         }
@@ -104,7 +107,7 @@ public class ConsumerWorker implements Runnable {
     }
 
     /**
-     * Continuously polls for messages from the broker, and displays the messages in terminal
+     * Continuously receives messages from the broker, and displays the messages in terminal
      * as they are received.
      */
     @Override
@@ -112,6 +115,7 @@ public class ConsumerWorker implements Runnable {
         while (running) {
             try {
                 Message<String> message = consumer.receive();
+                consumer.acknowledge(message);
                 logger.debug("Consumer received message {}", message);
             } catch (PulsarClientException e) {
                 e.printStackTrace();
