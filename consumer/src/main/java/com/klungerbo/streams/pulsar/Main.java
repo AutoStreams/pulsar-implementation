@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
     /**
      * Main function, entry point for consumer program.
      *
@@ -29,6 +30,12 @@ public class Main {
         consumerMaster.startWorkers();
     }
 
+    /**
+     * Gets the appropriate consumer count for the ConsumerMaster based on properties or input.
+     *
+     * @param args commandline arguments
+     * @return count of consumers
+     */
     private static int getConsumerCount(String[] args) {
         int count = 0;
         Options options = new Options();
