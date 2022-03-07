@@ -8,6 +8,7 @@ import com.klungerbo.streams.utils.fileutils.FileUtils;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -16,6 +17,7 @@ import org.apache.pulsar.client.api.Message;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
 import org.apache.pulsar.client.api.Schema;
+import org.apache.pulsar.client.api.SubscriptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,8 +86,7 @@ public class ConsumerWorker implements Runnable {
     }
 
     /**
-     * Gets a mapped version of supplied properties for the pulsar consumer. Adds additional
-     * configurations as necessary.
+     * Gets a mapped version of supplied properties for the pulsar consumer.
      *
      * @param props properties to carry over into the returned map
      * @return map of all relevant configurations in String-Object pairs
@@ -100,8 +101,35 @@ public class ConsumerWorker implements Runnable {
         String subscriptionName = System.getenv().getOrDefault("SUBSCRIPTION_NAME",
             props.getProperty("pulsar.subscriptionName", "subscription"));
 
+        String subscriptionType = System.getenv().getOrDefault("SUBSCRIPTION_TYPE",
+            props.getProperty("pulsar.subscriptionType", "exclusive"));
+
+        SubscriptionType st = switch (subscriptionType.toLowerCase(Locale.ROOT)) {
+            case ("shared") -> SubscriptionType.Shared;
+            case ("key-shared") -> SubscriptionType.Key_Shared;
+            case ("failover") -> SubscriptionType.Failover;
+            default -> SubscriptionType.Exclusive;
+        };
+
+        int receiverQueueSize = Integer.parseInt(System.getenv().getOrDefault("RECEIVER_QUEUE_SIZE",
+            props.getProperty("pulsar.receiverQueueSize", "1000")));
+
+        int acknowledgementsGroupTimeMicros = Integer.parseInt(System.getenv().getOrDefault("ACKNOWLEDGEMENTS_GROUP_TIME_MICROS",
+            props.getProperty("pulsar.acknowledgementsGroupTimeMicros", "1000")));
+
+        int ackTimeoutMillis = Integer.parseInt(System.getenv().getOrDefault("ACKNOWLEDGEMENTS_TIMEOUT_MILLIS",
+            props.getProperty("pulsar.acknowledgementsTimeoutMillis", "0")));
+
+        int tickDurationMillis = Integer.parseInt(System.getenv().getOrDefault("TICK_DURATION_MILLIS",
+            props.getProperty("pulsar.tickDurationMillis", "1000")));
+
         consumerProperties.put("topicNames", topics);
         consumerProperties.put("subscriptionName", subscriptionName);
+        consumerProperties.put("subscriptionType", st);
+        consumerProperties.put("receiverQueueSize",receiverQueueSize);
+        consumerProperties.put("acknowledgementsGroupTimeMicros", acknowledgementsGroupTimeMicros);
+        consumerProperties.put("ackTimeoutMillis", ackTimeoutMillis);
+        consumerProperties.put("tickDurationMillis", tickDurationMillis);
 
         return consumerProperties;
     }
