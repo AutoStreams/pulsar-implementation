@@ -8,7 +8,6 @@ import com.klungerbo.streams.utils.fileutils.FileUtils;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -106,22 +105,26 @@ public class ConsumerWorker implements Runnable {
 
         SubscriptionType st = SubscriptionType.valueOf(subscriptionType);
 
-        int receiverQueueSize = Integer.parseInt(System.getenv().getOrDefault("RECEIVER_QUEUE_SIZE",
+        int receiverQueueSize = Integer.parseInt(
+            System.getenv().getOrDefault("RECEIVER_QUEUE_SIZE",
             props.getProperty("pulsar.receiverQueueSize", "1000")));
 
-        int acknowledgementsGroupTimeMicros = Integer.parseInt(System.getenv().getOrDefault("ACKNOWLEDGEMENTS_GROUP_TIME_MICROS",
+        int acknowledgementsGroupTimeMicros = Integer.parseInt(
+            System.getenv().getOrDefault("ACKNOWLEDGEMENTS_GROUP_TIME_MICROS",
             props.getProperty("pulsar.acknowledgementsGroupTimeMicros", "1000")));
 
-        int ackTimeoutMillis = Integer.parseInt(System.getenv().getOrDefault("ACKNOWLEDGEMENTS_TIMEOUT_MILLIS",
+        int ackTimeoutMillis = Integer.parseInt(
+            System.getenv().getOrDefault("ACKNOWLEDGEMENTS_TIMEOUT_MILLIS",
             props.getProperty("pulsar.acknowledgementsTimeoutMillis", "0")));
 
-        int tickDurationMillis = Integer.parseInt(System.getenv().getOrDefault("TICK_DURATION_MILLIS",
+        int tickDurationMillis = Integer.parseInt(
+            System.getenv().getOrDefault("TICK_DURATION_MILLIS",
             props.getProperty("pulsar.tickDurationMillis", "1000")));
 
         consumerProperties.put("topicNames", topics);
         consumerProperties.put("subscriptionName", subscriptionName);
         consumerProperties.put("subscriptionType", st);
-        consumerProperties.put("receiverQueueSize",receiverQueueSize);
+        consumerProperties.put("receiverQueueSize", receiverQueueSize);
         consumerProperties.put("acknowledgementsGroupTimeMicros", acknowledgementsGroupTimeMicros);
         consumerProperties.put("ackTimeoutMillis", ackTimeoutMillis);
         consumerProperties.put("tickDurationMillis", tickDurationMillis);
