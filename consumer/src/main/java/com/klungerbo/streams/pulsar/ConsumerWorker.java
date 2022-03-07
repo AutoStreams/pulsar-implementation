@@ -102,14 +102,9 @@ public class ConsumerWorker implements Runnable {
             props.getProperty("pulsar.subscriptionName", "subscription"));
 
         String subscriptionType = System.getenv().getOrDefault("SUBSCRIPTION_TYPE",
-            props.getProperty("pulsar.subscriptionType", "exclusive"));
+            props.getProperty("pulsar.subscriptionType", "Exclusive"));
 
-        SubscriptionType st = switch (subscriptionType.toLowerCase(Locale.ROOT)) {
-            case ("shared") -> SubscriptionType.Shared;
-            case ("key-shared") -> SubscriptionType.Key_Shared;
-            case ("failover") -> SubscriptionType.Failover;
-            default -> SubscriptionType.Exclusive;
-        };
+        SubscriptionType st = SubscriptionType.valueOf(subscriptionType);
 
         int receiverQueueSize = Integer.parseInt(System.getenv().getOrDefault("RECEIVER_QUEUE_SIZE",
             props.getProperty("pulsar.receiverQueueSize", "1000")));

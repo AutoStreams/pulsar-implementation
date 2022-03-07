@@ -16,4 +16,4 @@ ENV TICK_DURATION_MILLIS = 1000
 
 FROM gcr.io/distroless/java17-debian11
 COPY --from=build /home/app/target/pulsar-consumer.jar /usr/local/lib/pulsar-consumer.jar
-ENTRYPOINT ["java", "-jar", "/usr/local/lib/data-consumer.jar"]
+ENTRYPOINT ["java", "-jar", "/usr/local/lib/pulsar-consumer.jar"]

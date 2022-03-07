@@ -31,8 +31,8 @@
     <dependencies>
         <dependency>
             <groupId>com.github.AutoStreams</groupId>
-            <artifactId>streams-prototype-utils</artifactId>
-            <version>feature~file_utils-SNAPSHOT</version>
+            <artifactId>prototype-utils</artifactId>
+            <version>1.2.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.pulsar</groupId>
