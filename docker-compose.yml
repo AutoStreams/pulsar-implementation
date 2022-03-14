@@ -6,7 +6,7 @@ services:
   #------| Streams Pulsar utils |------#
   #------------------------------------#
   data-provider:
-    build: ./streams-data-provider
+    build: ./prototype-data-provider
     environment:
       PRODUCER_URL: producer
       PRODUCER_PORT: 8992
