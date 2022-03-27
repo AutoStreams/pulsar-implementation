@@ -103,7 +103,7 @@ public class ConsumerWorker implements Runnable {
             props.getProperty("pulsar.subscriptionName", "subscription"));
 
         String subscriptionType = System.getenv().getOrDefault("SUBSCRIPTION_TYPE",
-            props.getProperty("pulsar.subscriptionType", "Exclusive"));
+            props.getProperty("pulsar.subscriptionType", "Shared"));
 
         SubscriptionType st = SubscriptionType.valueOf(subscriptionType);
 
@@ -138,12 +138,16 @@ public class ConsumerWorker implements Runnable {
         while (running) {
             logger.info("Waiting to recieve message...");
             Message<String> message = this.consumer.receive();
+            logger.info("Passed message-reception line");
+
             try {
                 this.consumer.acknowledge(message);
                 logger.debug("Consumer received message {}", message);
             } catch (PulsarClientException e) {
+                consumer.negativeAcknowledge(message);
                 e.printStackTrace();
             }
+            logger.info("end of loop");
         }
     }
     /**
