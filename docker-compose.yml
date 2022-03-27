@@ -19,18 +19,24 @@ services:
   producer:
     build: ./producer
     environment:
-      PULSAR_BROKER_URL: 'broker-1:9092,broker-2:29092'
-    depends_on:
-      - init-pulsar
+      PULSAR_BROKER_URL: 'pulsar://broker'
     ports:
-      - "8992:8992"
+      - 8992:8992
 
   consumer:
     build: ./consumer
     environment:
-      PULSAR_BROKER_URL: 'broker-1:9092,broker-2:29092'
+      PULSAR_BROKER_URL: 'pulsar://broker'
     depends_on:
-      - init-pulsar
+      - broker
     ports:
-      - "8993:8992"
+      - 8993:8992
       
+  broker:
+    image: apachepulsar/pulsar:2.6.0
+    ports:
+      - 8080:8080
+      - 6650:6650
+    environment:
+      PULSAR_MEM: " -Xms512m -Xmx512m -XX:MaxDirectMemorySize=1g"    
+    command: bin/pulsar standalone

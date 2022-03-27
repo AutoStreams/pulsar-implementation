@@ -50,7 +50,6 @@ public class ConsumerWorker implements Runnable {
      * Starts the thread for the consumer, also starting the consumer itself.
      */
     public void start() {
-        this.initialize();
         Thread t = new Thread(this);
         t.start();
     }
@@ -73,15 +72,18 @@ public class ConsumerWorker implements Runnable {
      * @throws IOException if there is a problem getting the config file for the worker
      */
     private void createConsumer() throws IOException {
+        logger.info("Creating consumer");
+        running = true;
         Properties props = FileUtils.loadConfigFromFile(CONFIG_NAME);
         Map<String, Object> consumerConfigurations = getConsumerPropertiesAsMap(props);
         String host = System.getenv().getOrDefault("PULSAR_BROKER_URL",
             props.getProperty("pulsar.url", "pulsar://localhost:6650"));
 
         PulsarClient client = PulsarClient.builder().serviceUrl(host).build();
-        consumer = client.newConsumer(Schema.STRING)
+        this.consumer = client.newConsumer(Schema.STRING)
             .loadConf(consumerConfigurations)
             .subscribe();
+        logger.info("Consumer created, topic subscribed to");
     }
 
     /**
@@ -132,20 +134,28 @@ public class ConsumerWorker implements Runnable {
         return consumerProperties;
     }
 
+    private void receive() throws PulsarClientException{
+        while (running) {
+            logger.info("Waiting to recieve message...");
+            Message<String> message = this.consumer.receive();
+            try {
+                this.consumer.acknowledge(message);
+                logger.debug("Consumer received message {}", message);
+            } catch (PulsarClientException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     /**
      * Continuously receives messages from the broker, and displays the messages in terminal
      * as they are received.
      */
     @Override
     public void run() {
-        while (running) {
-            try {
-                Message<String> message = consumer.receive();
-                consumer.acknowledge(message);
-                logger.debug("Consumer received message {}", message);
-            } catch (PulsarClientException e) {
-                e.printStackTrace();
-            }
+        try{
+        receive();}
+        catch (Exception e)  {
+            logger.info("Something went wrong");
         }
     }
 }

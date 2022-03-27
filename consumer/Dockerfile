@@ -3,11 +3,11 @@ COPY src /home/app/src
 COPY pom.xml /home/app
 RUN mvn -f /home/app/pom.xml clean package
 
-ENV PULSAR_BROKER_URL='broker-1:6650,broker-2:6651'
+ENV PULSAR_BROKER_URL='broker:6650'
 ENV TOPIC_NAME = 'Testtopic'
 ENV SUBSCRIPTION_NAME = 'subscription'
 ENV TOPICS_PATTERN = ''
-ENV SUBSCRIPTION_TYPE = 'Exclusive'
+ENV SUBSCRIPTION_TYPE = 'Shared'
 ENV RECEIVER_QUEUE_SIZE = 1000
 ENV ACKNOWLEDGEMENTS_GROUP_TIME_MICROS = 100
 ENV CONSUMER_NAME = 'Consumer'

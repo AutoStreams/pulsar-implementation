@@ -41,14 +41,17 @@ public class ConsumerMaster implements StreamsServer<String> {
     private void generateWorkers(int consumerCount) {
         if (consumerCount == 0) {
             try {
+                logger.info("Attempting to load properties from file");
                 Properties props = FileUtils.loadConfigFromFile(CONFIG_NAME);
                 consumerCount = Integer.parseInt(props.getProperty("consumers.count"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        logger.info("Consumer generation started. {} workers ordered", consumerCount);
         for (int i = 0; i < consumerCount; i++) {
             ConsumerWorker cw = new ConsumerWorker();
+            cw.initialize();
             workers.add(cw);
         }
     }

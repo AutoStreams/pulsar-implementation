@@ -22,7 +22,15 @@ public class Main {
      *
      * @param args optional arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
+        int iter = 0;
+        int maxIter = 5;
+        while ( iter < maxIter ) {
+            Thread.sleep(8000);
+            logger.info("Finished iteration {} out of {}", iter+1, maxIter);
+            iter++;
+        }
+
         int consumerCount = getConsumerCount(args);
 
         ConsumerMaster consumerMaster = new ConsumerMaster();

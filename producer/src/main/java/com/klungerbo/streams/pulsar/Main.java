@@ -16,8 +16,11 @@ public final class Main {
      *
      * @param args commandline arguments.
      */
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws InterruptedException {
         final Logger logger = LoggerFactory.getLogger(Main.class);
+
+        logger.info("Waiting here");
+        Thread.sleep(30000);
 
         PulsarPrototypeProducer pulsarPrototypeProducer = new PulsarPrototypeProducer();
         if (!pulsarPrototypeProducer.initialize()) {
