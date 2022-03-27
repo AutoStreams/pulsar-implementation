@@ -23,7 +23,7 @@ public final class Main {
         int tries = 100;
         int currentTry = 1;
         int secondsToSleep = 5;
-        
+        Thread.sleep(30000);
         PulsarPrototypeProducer pulsarPrototypeProducer = new PulsarPrototypeProducer();
         while (!pulsarPrototypeProducer.initialize() && currentTry <= tries) {
             logger.warn(
