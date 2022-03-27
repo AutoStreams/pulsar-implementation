@@ -136,18 +136,16 @@ public class ConsumerWorker implements Runnable {
 
     private void receive() throws PulsarClientException{
         while (running) {
-            logger.info("Waiting to recieve message...");
+            logger.info("Waiting to receive message...");
             Message<String> message = this.consumer.receive();
-            logger.info("Passed message-reception line");
 
             try {
                 this.consumer.acknowledge(message);
-                logger.debug("Consumer received message {}", message);
+                logger.info("Consumer received message {}", message);
             } catch (PulsarClientException e) {
                 consumer.negativeAcknowledge(message);
                 e.printStackTrace();
             }
-            logger.info("end of loop");
         }
     }
     /**
@@ -157,9 +155,11 @@ public class ConsumerWorker implements Runnable {
     @Override
     public void run() {
         try{
-        receive();}
+        receive();
+        }
         catch (Exception e)  {
-            logger.info("Something went wrong");
+            logger.info("Something went wrong with the pulsar client. " +
+                    "There might be an issue with connection to the broker");
         }
     }
 }
