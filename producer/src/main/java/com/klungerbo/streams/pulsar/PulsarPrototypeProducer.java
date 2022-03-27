@@ -232,6 +232,7 @@ public class PulsarPrototypeProducer implements StreamsServer<String> {
 
         } catch (PulsarClientException e) {
             e.printStackTrace();
+            return false;
         }
 
         return true;
