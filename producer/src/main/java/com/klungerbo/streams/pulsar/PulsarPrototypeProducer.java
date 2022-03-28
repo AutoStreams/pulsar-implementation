@@ -221,6 +221,7 @@ public class PulsarPrototypeProducer implements StreamsServer<String> {
             PulsarPrototypeProducer.sanitizeProducerPropertiesMap(producerPropertiesMap);
 
         try {
+            logger.info("Establishing connection to {}", host);
             this.pulsarClient = PulsarClient.builder()
                 .serviceUrl(host)
                 .build();

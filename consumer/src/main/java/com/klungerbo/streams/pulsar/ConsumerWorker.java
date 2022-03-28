@@ -43,6 +43,7 @@ public class ConsumerWorker implements Runnable {
             logger.error("Exception occurred during construction of consumer");
             ioe.printStackTrace();
         }
+        running = true;
         this.start();
     }
 
@@ -50,7 +51,6 @@ public class ConsumerWorker implements Runnable {
      * Starts the thread for the consumer, also starting the consumer itself.
      */
     public void start() {
-        this.initialize();
         Thread t = new Thread(this);
         t.start();
     }
@@ -73,15 +73,17 @@ public class ConsumerWorker implements Runnable {
      * @throws IOException if there is a problem getting the config file for the worker
      */
     private void createConsumer() throws IOException {
+        logger.info("Creating consumer");
         Properties props = FileUtils.loadConfigFromFile(CONFIG_NAME);
         Map<String, Object> consumerConfigurations = getConsumerPropertiesAsMap(props);
         String host = System.getenv().getOrDefault("PULSAR_BROKER_URL",
             props.getProperty("pulsar.url", "pulsar://localhost:6650"));
 
         PulsarClient client = PulsarClient.builder().serviceUrl(host).build();
-        consumer = client.newConsumer(Schema.STRING)
+        this.consumer = client.newConsumer(Schema.STRING)
             .loadConf(consumerConfigurations)
             .subscribe();
+        logger.info("Consumer created, topic subscribed to");
     }
 
     /**
@@ -101,7 +103,7 @@ public class ConsumerWorker implements Runnable {
             props.getProperty("pulsar.subscriptionName", "subscription"));
 
         String subscriptionType = System.getenv().getOrDefault("SUBSCRIPTION_TYPE",
-            props.getProperty("pulsar.subscriptionType", "Exclusive"));
+            props.getProperty("pulsar.subscriptionType", "Shared"));
 
         SubscriptionType st = SubscriptionType.valueOf(subscriptionType);
 
@@ -132,20 +134,29 @@ public class ConsumerWorker implements Runnable {
         return consumerProperties;
     }
 
+    private void receive() {
+        while (running) {
+            Message<String> message = null;
+
+            try{
+                logger.info("Waiting to receive message...");
+                message = this.consumer.receive();
+
+                this.consumer.acknowledge(message);
+                logger.info("Consumer received message {}", message.getValue());
+
+            } catch (PulsarClientException e) {
+                consumer.negativeAcknowledge(message);
+                e.printStackTrace();
+            }
+        }
+    }
     /**
      * Continuously receives messages from the broker, and displays the messages in terminal
      * as they are received.
      */
     @Override
     public void run() {
-        while (running) {
-            try {
-                Message<String> message = consumer.receive();
-                consumer.acknowledge(message);
-                logger.debug("Consumer received message {}", message);
-            } catch (PulsarClientException e) {
-                e.printStackTrace();
-            }
-        }
+        receive();
     }
 }

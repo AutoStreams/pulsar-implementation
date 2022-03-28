@@ -23,6 +23,14 @@ public final class Main {
         int tries = 100;
         int currentTry = 1;
         int secondsToSleep = 5;
+        // Sleep to avoid conflict with broker. Producer must wait for broker to be ready
+        // TODO find a better way to determine when producer can connect to broker
+        try{
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
+            logger.info("Unable to sleep");
+        }
+
         PulsarPrototypeProducer pulsarPrototypeProducer = new PulsarPrototypeProducer();
         while (!pulsarPrototypeProducer.initialize() && currentTry <= tries) {
             logger.warn(
