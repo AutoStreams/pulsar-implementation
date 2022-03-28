@@ -22,13 +22,17 @@ public class Main {
      *
      * @param args optional arguments
      */
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         int iter = 0;
         int maxIter = 5;
         while ( iter < maxIter ) {
-            Thread.sleep(8000);
-            logger.info("Finished iteration {} out of {}", iter+1, maxIter);
-            iter++;
+            try {
+                Thread.sleep(8000);
+                logger.info("Finished iteration {} out of {}", iter + 1, maxIter);
+                iter++;
+            } catch (InterruptedException ie) {
+                logger.info("Could not put thread to sleep");
+            }
         }
 
         int consumerCount = getConsumerCount(args);

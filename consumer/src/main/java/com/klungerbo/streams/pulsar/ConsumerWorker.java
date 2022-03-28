@@ -43,6 +43,7 @@ public class ConsumerWorker implements Runnable {
             logger.error("Exception occurred during construction of consumer");
             ioe.printStackTrace();
         }
+        running = true;
         this.start();
     }
 
@@ -73,7 +74,6 @@ public class ConsumerWorker implements Runnable {
      */
     private void createConsumer() throws IOException {
         logger.info("Creating consumer");
-        running = true;
         Properties props = FileUtils.loadConfigFromFile(CONFIG_NAME);
         Map<String, Object> consumerConfigurations = getConsumerPropertiesAsMap(props);
         String host = System.getenv().getOrDefault("PULSAR_BROKER_URL",
@@ -134,14 +134,17 @@ public class ConsumerWorker implements Runnable {
         return consumerProperties;
     }
 
-    private void receive() throws PulsarClientException{
+    private void receive() {
         while (running) {
-            logger.info("Waiting to receive message...");
-            Message<String> message = this.consumer.receive();
+            Message<String> message = null;
 
-            try {
+            try{
+                logger.info("Waiting to receive message...");
+                message = this.consumer.receive();
+
                 this.consumer.acknowledge(message);
                 logger.info("Consumer received message {}", message);
+
             } catch (PulsarClientException e) {
                 consumer.negativeAcknowledge(message);
                 e.printStackTrace();
@@ -154,12 +157,6 @@ public class ConsumerWorker implements Runnable {
      */
     @Override
     public void run() {
-        try{
         receive();
-        }
-        catch (Exception e)  {
-            logger.info("Something went wrong with the pulsar client. " +
-                    "There might be an issue with connection to the broker");
-        }
     }
 }
