@@ -17,7 +17,7 @@ public final class Main {
      *
      * @param args commandline arguments.
      */
-    public static void main(final String[] args) throws InterruptedException {
+    public static void main(final String[] args) {
         final Logger logger = LoggerFactory.getLogger(Main.class);
 
         int tries = 100;
