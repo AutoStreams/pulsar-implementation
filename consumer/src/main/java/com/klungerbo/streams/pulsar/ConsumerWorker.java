@@ -143,7 +143,7 @@ public class ConsumerWorker implements Runnable {
                 message = this.consumer.receive();
 
                 this.consumer.acknowledge(message);
-                logger.info("Consumer received message {}", message);
+                logger.info("Consumer received message {}", message.getValue());
 
             } catch (PulsarClientException e) {
                 consumer.negativeAcknowledge(message);
