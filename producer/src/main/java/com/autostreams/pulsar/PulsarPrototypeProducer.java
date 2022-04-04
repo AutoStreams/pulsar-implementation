@@ -4,9 +4,9 @@
  * https://www.baeldung.com/apache-pulsar
  */
 
-package com.klungerbo.streams.pulsar;
+package com.autostreams.pulsar;
 
-import com.klungerbo.streams.utils.datareceiver.StreamsServer;
+import com.autostreams.utils.datareceiver.StreamsServer;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;

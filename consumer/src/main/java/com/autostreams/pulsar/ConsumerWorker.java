@@ -1,10 +1,10 @@
 /**
-* Code adapted from https://www.baeldung.com/apache-pulsar
-*/
+ * Code adapted from https://www.baeldung.com/apache-pulsar
+ */
 
-package com.klungerbo.streams.pulsar;
+package com.autostreams.pulsar;
 
-import com.klungerbo.streams.utils.fileutils.FileUtils;
+import com.autostreams.utils.fileutils.FileUtils;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,16 +21,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *  Worker that contains the consumer, receiving data from a broker.
+ * Worker that contains the consumer, receiving data from a broker.
  *
  * @version 1.0
  * @since 1.0
  */
 public class ConsumerWorker implements Runnable {
+    private static final String CONFIG_NAME = "consumerconfig.properties";
+    private final Logger logger = LoggerFactory.getLogger(ConsumerWorker.class);
     private Consumer<String> consumer = null;
     private boolean running = false;
-    private final Logger logger = LoggerFactory.getLogger(ConsumerWorker.class);
-    private static final String CONFIG_NAME = "consumerconfig.properties";
     private Set<String> topics = new HashSet<>();
 
     /**
@@ -74,7 +74,7 @@ public class ConsumerWorker implements Runnable {
      */
     private void createConsumer() throws IOException {
         logger.info("Creating consumer");
-        Properties props = FileUtils.loadConfigFromFile(CONFIG_NAME);
+        Properties props = FileUtils.loadPropertiesFromFile(CONFIG_NAME);
         Map<String, Object> consumerConfigurations = getConsumerPropertiesAsMap(props);
         String host = System.getenv().getOrDefault("PULSAR_BROKER_URL",
             props.getProperty("pulsar.url", "pulsar://localhost:6650"));
@@ -109,19 +109,19 @@ public class ConsumerWorker implements Runnable {
 
         int receiverQueueSize = Integer.parseInt(
             System.getenv().getOrDefault("RECEIVER_QUEUE_SIZE",
-            props.getProperty("pulsar.receiverQueueSize", "1000")));
+                props.getProperty("pulsar.receiverQueueSize", "1000")));
 
         int acknowledgementsGroupTimeMicros = Integer.parseInt(
             System.getenv().getOrDefault("ACKNOWLEDGEMENTS_GROUP_TIME_MICROS",
-            props.getProperty("pulsar.acknowledgementsGroupTimeMicros", "1000")));
+                props.getProperty("pulsar.acknowledgementsGroupTimeMicros", "1000")));
 
         int ackTimeoutMillis = Integer.parseInt(
             System.getenv().getOrDefault("ACKNOWLEDGEMENTS_TIMEOUT_MILLIS",
-            props.getProperty("pulsar.acknowledgementsTimeoutMillis", "0")));
+                props.getProperty("pulsar.acknowledgementsTimeoutMillis", "0")));
 
         int tickDurationMillis = Integer.parseInt(
             System.getenv().getOrDefault("TICK_DURATION_MILLIS",
-            props.getProperty("pulsar.tickDurationMillis", "1000")));
+                props.getProperty("pulsar.tickDurationMillis", "1000")));
 
         consumerProperties.put("topicNames", topics);
         consumerProperties.put("subscriptionName", subscriptionName);
@@ -138,7 +138,7 @@ public class ConsumerWorker implements Runnable {
         while (running) {
             Message<String> message = null;
 
-            try{
+            try {
                 logger.info("Waiting to receive message...");
                 message = this.consumer.receive();
 
@@ -151,6 +151,7 @@ public class ConsumerWorker implements Runnable {
             }
         }
     }
+
     /**
      * Continuously receives messages from the broker, and displays the messages in terminal
      * as they are received.

@@ -1,8 +1,3 @@
-[submodule "prototype-data-provider"]
-	path = prototype-data-provider
-	url = git@github.com:AutoStreams/prototype-data-provider.git
-	branch = master
-	update = rebase
 [submodule "autostreams-checks"]
 	path = autostreams-checks
 	url = https://github.com/AutoStreams/autostreams-checks.git
