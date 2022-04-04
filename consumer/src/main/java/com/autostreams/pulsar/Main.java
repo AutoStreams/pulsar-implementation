@@ -1,4 +1,4 @@
-package com.klungerbo.streams.pulsar;
+package com.autostreams.pulsar;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -25,7 +25,7 @@ public class Main {
     public static void main(String[] args) {
         int iter = 0;
         int maxIter = 5;
-        while ( iter < maxIter ) {
+        while (iter < maxIter) {
             try {
                 Thread.sleep(8000);
                 logger.info("Finished iteration {} out of {}", iter + 1, maxIter);

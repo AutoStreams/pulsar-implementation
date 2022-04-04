@@ -1,6 +1,6 @@
-package com.klungerbo.streams.pulsar;
+package com.autostreams.pulsar;
 
-import com.klungerbo.streams.utils.datareceiver.DataReceiver;
+import com.autostreams.utils.datareceiver.DataReceiver;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ public final class Main {
         int secondsToSleep = 5;
         // Sleep to avoid conflict with broker. Producer must wait for broker to be ready
         // TODO find a better way to determine when producer can connect to broker
-        try{
+        try {
             TimeUnit.SECONDS.sleep(3);
         } catch (InterruptedException e) {
             logger.info("Unable to sleep");

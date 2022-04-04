@@ -4,15 +4,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.klungerbo</groupId>
+    <groupId>com.autostreams</groupId>
     <artifactId>pulsar-producer</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
     <name>pulsar-producer</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <mainClass>com.klungerbo.streams.pulsar.Main</mainClass>
+        <mainClass>com.autostreams.pulsar.Main</mainClass>
     </properties>
 
     <repositories>
@@ -26,7 +26,7 @@
         <dependency>
             <groupId>com.github.AutoStreams</groupId>
             <artifactId>prototype-utils</artifactId>
-            <version>1.2.0</version>
+            <version>v0.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.pulsar</groupId>
@@ -52,7 +52,7 @@
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
-                            <mainClass>com.klungerbo.streams.pulsar.Main</mainClass>
+                            <mainClass>com.autostreams.pulsar.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
