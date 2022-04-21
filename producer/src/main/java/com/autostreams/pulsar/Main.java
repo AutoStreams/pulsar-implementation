@@ -20,9 +20,6 @@ public final class Main {
     public static void main(final String[] args) {
         final Logger logger = LoggerFactory.getLogger(Main.class);
 
-        int tries = 100;
-        int currentTry = 1;
-        int secondsToSleep = 5;
         // Sleep to avoid conflict with broker. Producer must wait for broker to be ready
         // TODO find a better way to determine when producer can connect to broker
         try {
@@ -32,11 +29,10 @@ public final class Main {
         }
 
         PulsarPrototypeProducer pulsarPrototypeProducer = new PulsarPrototypeProducer();
-        while (!pulsarPrototypeProducer.initialize() && currentTry <= tries) {
+        while (!pulsarPrototypeProducer.initialize()) {
+            int secondsToSleep = 5;
             logger.warn(
-                "[{}/{}] Failed to initialize PulsarPrototypeProducer, retrying in {} seconds",
-                currentTry,
-                tries,
+                "Failed to initialize PulsarPrototypeProducer, retrying in {} seconds",
                 secondsToSleep
             );
 
@@ -47,18 +43,6 @@ public final class Main {
                 e.printStackTrace();
                 Thread.currentThread().interrupt();
             }
-
-            currentTry++;
-        }
-
-        // Failed to connect to the Pulsar broker within given time limit.
-        if (currentTry > tries) {
-            logger.error(
-                "Failed to connect to the Pulsar broker after {} tries, exiting the application",
-                tries
-            );
-
-            return;
         }
 
         logger.debug("Creating DataReceiver for PulsarProducer");
