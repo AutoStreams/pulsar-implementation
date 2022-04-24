@@ -66,7 +66,6 @@
     <modules>
         <module>producer</module>
         <module>consumer</module>
-        <module>data-provider</module>
     </modules>
 
 </project>
