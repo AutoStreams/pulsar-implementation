@@ -83,7 +83,7 @@ public class DataReceiverHandler extends SimpleChannelInboundHandler<String> {
      */
     @Override
     protected void channelRead0(ChannelHandlerContext context, String message) {
-        logger.info("Received message: {}", message);
+        logger.debug("Received message: {}", message);
 
         if (DISCONNECT_COMMAND.equalsIgnoreCase(message)) {
             closeChannel(context.channel());
