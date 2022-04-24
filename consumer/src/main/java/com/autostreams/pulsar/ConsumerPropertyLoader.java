@@ -11,8 +11,8 @@ import java.util.Set;
 /**
  * Represents an object responsible for handling and loading configurations for the consumer.
  *
- * @version 1.0
- * @since 1.0
+ * @version 0.1
+ * @since 0.1
  */
 public class ConsumerPropertyLoader {
     private static final String CONFIG_NAME = "consumerconfig.properties";
@@ -34,10 +34,9 @@ public class ConsumerPropertyLoader {
      */
     public Map<String, Object> getConsumerConfiguration() {
         this.setConfigVariableKeys();
-        String firstVariableKey = this.configVariableKeys.get(0).environmentVariableName;
 
         HashMap<String, Object> consumerConfiguration;
-        if (canSetValueFromEnvironmentVariable(firstVariableKey)) {
+        if (canSetValuesFromEnvironmentVariables()) {
             consumerConfiguration = this.getConfigurationFromEnvironment();
         } else {
             Properties properties = FileUtils.loadPropertiesFromFile(CONFIG_NAME);
@@ -101,6 +100,24 @@ public class ConsumerPropertyLoader {
         return System.getenv().containsKey(variableName);
     }
 
+    private boolean canSetValuesFromEnvironmentVariables() {
+        boolean result = true;
+        int index = 0;
+
+        while (result && index < this.configVariableKeys.size()) {
+            String environmentValueName = this
+                    .configVariableKeys
+                    .get(index)
+                    .environmentVariableName;
+            if (!this.canSetValueFromEnvironmentVariable(environmentValueName)) {
+                result = false;
+            }
+            index++;
+        }
+
+        return result;
+    }
+
     /**
      * Gets the consumer worker configuration from environment variables.
      *
@@ -117,12 +134,7 @@ public class ConsumerPropertyLoader {
                     .getenv()
                     .get(environmentVariableName);
 
-            if (environmentVariableName.equals("TOPIC_NAMES")) {
-                this.topics.add(String.valueOf(configurationValue));
-                result.put(propertyVariableName, this.topics);
-            } else {
-                result.put(propertyVariableName, configurationValue);
-            }
+            putVariableToResult(propertyVariableName, configurationValue, result);
         }
 
         return result;
@@ -141,14 +153,21 @@ public class ConsumerPropertyLoader {
             String propertyVariableName = configNamePair.propertyVariableName;
             Object configurationValue = properties.get(propertyVariableName);
 
-            if (propertyVariableName.equals("topicNames")) {
-                this.topics.add(String.valueOf(configurationValue));
-                result.put(propertyVariableName, this.topics);
-            } else {
-                result.put(propertyVariableName, configurationValue);
-            }
+            putVariableToResult(propertyVariableName, configurationValue, result);
         }
 
         return result;
+    }
+
+    private void putVariableToResult(String propertyVariableName,
+                                     Object configurationValue,
+                                     HashMap<String, Object> result) {
+
+        if (propertyVariableName.equals("topicNames")) {
+            this.topics.add(String.valueOf(configurationValue));
+            result.put(propertyVariableName, this.topics);
+        } else {
+            result.put(propertyVariableName, configurationValue);
+        }
     }
 }

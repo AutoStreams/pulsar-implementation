@@ -19,8 +19,8 @@ import org.slf4j.LoggerFactory;
  * Data receiver (server) that listens for messages from data producers (clients).
  * Messages are delegated to a Kafka prototype producer.
  *
- * @version 1.0
- * @since 1.0
+ * @version 0.1
+ * @since 0.1
  */
 public class DataReceiver {
     private final int port;
