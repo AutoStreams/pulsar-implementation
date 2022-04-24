@@ -13,6 +13,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <mainClass>com.autostreams.pulsar.Main</mainClass>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <repositories>
@@ -25,9 +26,16 @@
     <dependencies>
         <dependency>
             <groupId>com.github.AutoStreams</groupId>
-            <artifactId>prototype-utils</artifactId>
-            <version>v0.1.1</version>
+            <artifactId>utils</artifactId>
+            <version>v1.0.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.75.Final</version>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.pulsar</groupId>
             <artifactId>pulsar-client</artifactId>
@@ -37,6 +45,19 @@
 
     <build>
         <plugins>
+            <!--Disable packaging of default jar-->
+            <!--https://stackoverflow.com/questions/4101750/disable-the-default-jar-execution-->
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.1</version>
+                <executions>
+                    <execution>
+                        <id>default-jar</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
@@ -49,6 +70,7 @@
                 </executions>
                 <configuration>
                     <finalName>${project.artifactId}</finalName>
+                    <classifier>${project.version}</classifier>
                     <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
