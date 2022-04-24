@@ -27,7 +27,7 @@ public class Main {
         int maxIter = 5;
         while (iter < maxIter) {
             try {
-                Thread.sleep(8000);
+                Thread.sleep(80);
                 logger.info("Finished iteration {} out of {}", iter + 1, maxIter);
                 iter++;
             } catch (InterruptedException ie) {
