@@ -1,6 +1,9 @@
 package com.autostreams.pulsar;
 
-import com.autostreams.utils.datareceiver.DataReceiver;
+import static com.autostreams.utils.fileutils.FileUtils.loadPropertiesFromFile;
+
+import com.autostreams.datareceiver.DataReceiver;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,45 +15,84 @@ import org.slf4j.LoggerFactory;
  * @since 1.0
  */
 public final class Main {
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+    private static final String LISTEN_PORT = "listen.port";
+    private static final String CONFIG_PROPERTIES = "config.properties";
+    static int port;
+
     /**
      * The entrypoint of the application.
      *
      * @param args commandline arguments.
      */
     public static void main(final String[] args) {
-        final Logger logger = LoggerFactory.getLogger(Main.class);
+        loadConfigurationVariables();
+        printConfigurationVariables();
 
-        // Sleep to avoid conflict with broker. Producer must wait for broker to be ready
-        // TODO find a better way to determine when producer can connect to broker
-        try {
-            TimeUnit.SECONDS.sleep(3);
-        } catch (InterruptedException e) {
-            logger.info("Unable to sleep");
+        PulsarProducer pulsarProducer = createProducer();
+
+        DataReceiver dataReceiver = new DataReceiver(pulsarProducer, port);
+        dataReceiver.run();
+    }
+
+    private static void printConfigurationVariables() {
+        logger.info("Port: {}", port);
+    }
+
+    private static void loadConfigurationVariables() {
+        if (canLoadFromEnvironment()) {
+            loadFromEnvironment();
+        } else if (canLoadFromProperties()) {
+            loadFromProperties();
+        } else {
+            setDefault();
         }
+    }
 
-        PulsarPrototypeProducer pulsarPrototypeProducer = new PulsarPrototypeProducer();
-        while (!pulsarPrototypeProducer.initialize()) {
+    private static void loadFromEnvironment() {
+        port = Integer.parseInt(System.getenv().get(LISTEN_PORT));
+    }
+
+    private static void setDefault() {
+        port = 8992;
+    }
+
+    private static boolean canLoadFromEnvironment() {
+        return System.getenv().containsKey(LISTEN_PORT);
+    }
+
+    private static boolean canLoadFromProperties() {
+        Properties properties = loadPropertiesFromFile(CONFIG_PROPERTIES);
+        return properties.containsKey(LISTEN_PORT);
+    }
+
+    private static void loadFromProperties() {
+        Properties properties = loadPropertiesFromFile(CONFIG_PROPERTIES);
+        port = Integer.parseInt((String) properties.get(LISTEN_PORT));
+    }
+
+    private static PulsarProducer createProducer() {
+        PulsarProducer pulsarProducer = new PulsarProducer();
+        while (!pulsarProducer.initialize()) {
             int secondsToSleep = 5;
             logger.warn(
                 "Failed to initialize PulsarPrototypeProducer, retrying in {} seconds",
                 secondsToSleep
             );
 
-            try {
-                TimeUnit.SECONDS.sleep(secondsToSleep);
-            } catch (InterruptedException e) {
-                logger.error("Unable to sleep");
-                e.printStackTrace();
-                Thread.currentThread().interrupt();
-            }
+            sleepForSeconds(secondsToSleep);
         }
 
-        logger.debug("Creating DataReceiver for PulsarProducer");
-        DataReceiver dataReceiver = new DataReceiver(pulsarPrototypeProducer);
-        logger.debug("DataReceiver for PulsarProducer has been created");
+        return  pulsarProducer;
+    }
 
-        logger.debug("DataReceiver running");
-        dataReceiver.run();
-        logger.debug("DataReceiver ran for PulsarProducer, has finished");
+    private static void sleepForSeconds(int seconds) {
+        try {
+            TimeUnit.SECONDS.sleep(seconds);
+        } catch (InterruptedException e) {
+            logger.error("Unable to sleep");
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        }
     }
 }

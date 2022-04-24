@@ -6,10 +6,9 @@
 
 package com.autostreams.pulsar;
 
-import com.autostreams.utils.datareceiver.StreamsServer;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import static com.autostreams.utils.fileutils.FileUtils.loadPropertiesFromFile;
+
+import com.autostreams.datareceiver.StreamsServer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -32,10 +31,10 @@ import org.slf4j.LoggerFactory;
  * @version 1.0
  * @since 1.0
  */
-public class PulsarPrototypeProducer implements StreamsServer<String> {
+public class PulsarProducer implements StreamsServer<String> {
     private static final String CONFIG_PROPERTIES = "config.properties";
     private static final String PRODUCER_PROPERTIES = "producer.properties";
-    private final Logger logger = LoggerFactory.getLogger(PulsarPrototypeProducer.class);
+    private final Logger logger = LoggerFactory.getLogger(PulsarProducer.class);
     PulsarClient pulsarClient;
     Producer<String> producer;
 
@@ -174,27 +173,6 @@ public class PulsarPrototypeProducer implements StreamsServer<String> {
     }
 
     /**
-     * Load configuration from properties file.
-     *
-     * @return the properties loaded from the configuration file.
-     * @throws IOException if there was a problem loading or processing the configuration file.
-     */
-    private static Properties loadPropsFromConfig(String propertiesFile) throws IOException {
-        Properties props = new Properties();
-        InputStream inputStream = PulsarPrototypeProducer.class
-            .getClassLoader()
-            .getResourceAsStream(propertiesFile);
-
-        if (inputStream == null) {
-            throw new FileNotFoundException("Could not open " + propertiesFile);
-        }
-
-        props.load(inputStream);
-
-        return props;
-    }
-
-    /**
      * Initialize the Pulsar prototype producer.
      *
      * @return true if successful, false if else.
@@ -203,22 +181,17 @@ public class PulsarPrototypeProducer implements StreamsServer<String> {
         Properties configProperties;
         Properties producerProperties;
 
-        try {
-            configProperties = loadPropsFromConfig(CONFIG_PROPERTIES);
-            producerProperties = loadPropsFromConfig(PRODUCER_PROPERTIES);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
+        configProperties = loadPropertiesFromFile(CONFIG_PROPERTIES);
+        producerProperties = loadPropertiesFromFile(PRODUCER_PROPERTIES);
 
         final String host = System.getenv().getOrDefault("PULSAR_BROKER_URL",
             configProperties.getProperty("pulsar.broker.url", "pulsar://127.0.0.1:6650")
         );
 
         final Map<String, String> producerPropertiesMap =
-            PulsarPrototypeProducer.convertPropertiesToMap(producerProperties);
+            PulsarProducer.convertPropertiesToMap(producerProperties);
         final Map<String, Object> sanitizedPropertiesMap =
-            PulsarPrototypeProducer.sanitizeProducerPropertiesMap(producerPropertiesMap);
+            PulsarProducer.sanitizeProducerPropertiesMap(producerPropertiesMap);
 
         try {
             logger.info("Establishing connection to {}", host);
