@@ -101,21 +101,21 @@ public class ConsumerPropertyLoader {
     }
 
     private boolean canSetValuesFromEnvironmentVariables() {
-        boolean result = true;
+        boolean valid = true;
         int index = 0;
 
-        while (result && index < this.configVariableKeys.size()) {
+        while (valid && index < this.configVariableKeys.size()) {
             String environmentValueName = this
                     .configVariableKeys
                     .get(index)
                     .environmentVariableName;
             if (!this.canSetValueFromEnvironmentVariable(environmentValueName)) {
-                result = false;
+                valid = false;
             }
             index++;
         }
 
-        return result;
+        return valid;
     }
 
     /**
