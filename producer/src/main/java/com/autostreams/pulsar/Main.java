@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 /**
  * The class containing the main entry point of the Pulsar producer prototype application.
  *
- * @version 1.0
- * @since 1.0
+ * @version 0.1
+ * @since 0.1
  */
 public final class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);

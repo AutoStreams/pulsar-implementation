@@ -16,8 +16,8 @@ import io.netty.handler.codec.string.StringEncoder;
 /**
  * Pipeline initializer for data receiver.
  *
- * @version 1.0
- * @since 1.0
+ * @version 0.1
+ * @since 0.1
  */
 public class DataReceiverInitializer extends ChannelInitializer<SocketChannel> {
     private final DataReceiver dataReceiver;

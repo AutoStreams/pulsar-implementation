@@ -20,8 +20,8 @@ import org.slf4j.LoggerFactory;
  * Handler for Data receiver which manages client connection/disconnection
  * and incoming messages.
  *
- * @version 1.0
- * @since 1.0
+ * @version 0.1
+ * @since 0.1
  */
 public class DataReceiverHandler extends SimpleChannelInboundHandler<String> {
     private static final String DISCONNECT_COMMAND = "streams_command_disconnect";
