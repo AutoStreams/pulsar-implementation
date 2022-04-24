@@ -70,6 +70,8 @@
                 </executions>
                 <configuration>
                     <finalName>${project.artifactId}</finalName>
+                    <classifier>${project.version}</classifier>
+                    <appendAssemblyId>false</appendAssemblyId>
                     <archive>
                         <manifest>
                             <mainClass>com.autostreams.pulsar.Main</mainClass>
