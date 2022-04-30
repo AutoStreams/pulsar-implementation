@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ConsumerWorker implements Runnable {
     private final Logger logger = LoggerFactory.getLogger(ConsumerWorker.class);
-    private Consumer<String> consumer = null;
+    private Consumer<byte[]> consumer = null;
     private boolean running = false;
     private final ConsumerPropertyLoader propertyLoader;
 
@@ -81,7 +81,7 @@ public class ConsumerWorker implements Runnable {
                 .serviceUrl(host)
                 .build();
 
-        this.consumer = client.newConsumer(Schema.STRING)
+        this.consumer = client.newConsumer(Schema.BYTES)
             .loadConf(consumerProperties)
             .subscribe();
 
@@ -93,7 +93,7 @@ public class ConsumerWorker implements Runnable {
      */
     private void receive() {
         while (running) {
-            Message<String> message = null;
+            Message<byte[]> message = null;
 
             try {
                 logger.info("Waiting to receive message...");
