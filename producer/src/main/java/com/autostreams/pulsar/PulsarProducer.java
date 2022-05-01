@@ -31,12 +31,12 @@ import org.slf4j.LoggerFactory;
  * @version 0.1
  * @since 0.1
  */
-public class PulsarProducer implements StreamsServer<String> {
+public class PulsarProducer implements StreamsServer<byte[]> {
     private static final String CONFIG_PROPERTIES = "config.properties";
     private static final String PRODUCER_PROPERTIES = "producer.properties";
     private final Logger logger = LoggerFactory.getLogger(PulsarProducer.class);
     PulsarClient pulsarClient;
-    Producer<String> producer;
+    Producer<byte[]> producer;
 
     /**
      * Code adapted from:
@@ -199,7 +199,7 @@ public class PulsarProducer implements StreamsServer<String> {
                 .serviceUrl(host)
                 .build();
 
-            this.producer = this.pulsarClient.newProducer(Schema.STRING)
+            this.producer = this.pulsarClient.newProducer(Schema.BYTES)
                 .loadConf(sanitizedPropertiesMap)
                 .create();
 
@@ -217,7 +217,7 @@ public class PulsarProducer implements StreamsServer<String> {
      * @param message the message to send to the Pulsar broker.
      */
     @Override
-    public void onMessage(String message) {
+    public void onMessage(byte[] message) {
         this.producer.sendAsync(message)
             .thenAcceptAsync(msgId -> logger.debug("{} sent to broker", msgId));
     }
