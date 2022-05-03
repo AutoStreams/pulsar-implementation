@@ -1,4 +1,5 @@
-# Pulsar in Docker
-To acquire the data-provider submodule, run the command
-```git submodule update --init --recursive```
-From the root path of this project
+![https://autostreams.github.io/pulsar-implementation/javadoc/](https://img.shields.io/badge/Javadoc-master-green?style=plastic)
+![https://autostreams.github.io/pulsar-implementation/javadoc-develop/](https://img.shields.io/badge/Javadoc-develop-green?style=plastic)
+
+# Pulsar implementation
+
