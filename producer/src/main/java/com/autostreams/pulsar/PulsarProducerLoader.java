@@ -8,6 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class PulsarProducerLoader {
+    private static final String LISTEN_PORT = "listen.port";
+    private static final String CONFIG_PROPERTIES = "config.properties";
+    static int port;
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     /**

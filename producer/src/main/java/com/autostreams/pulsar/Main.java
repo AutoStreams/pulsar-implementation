@@ -9,10 +9,6 @@ import static com.autostreams.pulsar.PulsarProducerLoader.createProducer;
  * @since 0.1
  */
 public final class Main {
-    private static final String LISTEN_PORT = "listen.port";
-    private static final String CONFIG_PROPERTIES = "config.properties";
-    static int port;
-
     /**
      * The entrypoint of the application.
      *
