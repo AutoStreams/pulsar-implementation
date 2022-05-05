@@ -8,7 +8,7 @@ package com.autostreams.pulsar;
 
 import static com.autostreams.utils.fileutils.FileUtils.loadPropertiesFromFile;
 
-import com.autostreams.datareceiver.StreamsServer;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
