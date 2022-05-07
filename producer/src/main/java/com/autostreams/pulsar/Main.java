@@ -1,6 +1,9 @@
 package com.autostreams.pulsar;
 
-import static com.autostreams.pulsar.PulsarProducerLoader.createProducer;
+
+import com.autostreams.pulsar.producer.PulsarProducer;
+import com.autostreams.pulsar.receiver.DataReceiverCreator;
+import com.autostreams.utils.datareceiver.DataReceiver;
 
 /**
  * The class containing the main entry point of the Pulsar producer prototype application.
@@ -15,9 +18,10 @@ public final class Main {
      * @param args commandline arguments.
      */
     public static void main(final String[] args) {
-        PulsarProducer pulsarProducer = createProducer();
+        PulsarProducer pulsarProducer = new PulsarProducer();
+        pulsarProducer.initialize();
 
-        DataReceiver dataReceiver = new DataReceiver(pulsarProducer, port);
+        DataReceiver dataReceiver = DataReceiverCreator.createReceiver(pulsarProducer);
         dataReceiver.run();
     }
 }

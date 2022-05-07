@@ -4,11 +4,11 @@
  * https://www.baeldung.com/apache-pulsar
  */
 
-package com.autostreams.pulsar;
+package com.autostreams.pulsar.producer;
 
 import static com.autostreams.utils.fileutils.FileUtils.loadPropertiesFromFile;
 
-
+import com.autostreams.utils.datareceiver.StreamsServer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A prototype of a Pulsar producer.
+ * Pulsar producer implementation.
  *
  * @version 0.1
  * @since 0.1
@@ -35,8 +35,221 @@ public class PulsarProducer implements StreamsServer<String> {
     private static final String CONFIG_PROPERTIES = "config.properties";
     private static final String PRODUCER_PROPERTIES = "producer.properties";
     private final Logger logger = LoggerFactory.getLogger(PulsarProducer.class);
-    PulsarClient pulsarClient;
-    Producer<String> producer;
+    private PulsarClient pulsarClient;
+    private Producer<String> producer;
+
+    /**
+     * Initialize the Pulsar prototype producer.
+     */
+    public void initialize() {
+        String host = loadAndGetHostPropertyVariable();
+        Map<String, Object> producerProperties = loadAndGetProducerPropertyVariables();
+
+        connectToBroker(host, producerProperties);
+    }
+
+    /**
+     * Load the host property variable from environment or the property configuration file.
+     * Note: The environment variable is prioritized over the property configuration file variable.
+     *
+     * @return a string representing the host on the form "pulsar://[IP]:[PORT].
+     */
+    private static String loadAndGetHostPropertyVariable() {
+        Properties configProperties = loadPropertiesFromFile(CONFIG_PROPERTIES);
+
+        return System.getenv().getOrDefault("PULSAR_BROKER_URL",
+            configProperties.getProperty("pulsar.broker.url", "pulsar://127.0.0.1:6650")
+        );
+    }
+
+    /**
+     * Load the producer properties from environment or the property configuration file.
+     * Note: The environment variables are prioritized over the configuration file variables.
+     *
+     * @return a string representing the host on the form "pulsar://[IP]:[PORT].
+     */
+    private static Map<String, Object> loadAndGetProducerPropertyVariables() {
+        Properties producerProperties = loadPropertiesFromFile(PRODUCER_PROPERTIES);
+        Map<String, String> producerPropertiesMap =
+            PulsarProducer.convertPropertiesToMap(producerProperties);
+
+        return PulsarProducer.transformProducerPropertiesMap(producerPropertiesMap);
+    }
+
+    /**
+     * Tries to connect to the Pulsar broker.
+     * The connection is retried every 5 seconds on failure for an unlimited amount of tries.
+     */
+    private void connectToBroker(String host, Map<String, Object> producerProperties) {
+        while (!establishConnection(host, producerProperties)) {
+            int secondsToSleep = 5;
+            logger.warn(
+                "Failed to initialize PulsarPrototypeProducer, retrying in {} seconds",
+                secondsToSleep
+            );
+
+            sleepForSeconds(secondsToSleep);
+        }
+    }
+
+    /**
+     * Tries to establish a connection to the Pulsar broker.
+     *
+     * @param host the ip and port of the Pulsar broker in the form "pulsar://[IP]:[PORT].
+     *             Example: "pulsar://127.0.0.1:6650"
+     * @param properties a map of property names to properties.
+     */
+    private boolean establishConnection(String host, Map<String, Object> properties) {
+        logger.info("Establishing connection to {}", host);
+
+        try {
+            this.pulsarClient = PulsarClient.builder()
+                .serviceUrl(host)
+                .build();
+
+            this.producer = this.pulsarClient.newProducer(Schema.STRING)
+                .loadConf(properties)
+                .create();
+        } catch (PulsarClientException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Sleep for a specified amount of time in seconds.
+     *
+     * @param seconds the seconds to sleep for.
+     */
+    private void sleepForSeconds(int seconds) {
+        try {
+            TimeUnit.SECONDS.sleep(seconds);
+        } catch (InterruptedException e) {
+            logger.error("Unable to sleep");
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    /**
+     * Transforms the producer properties map of String, String to String, Object.
+     *
+     * @param producerPropertiesMap the producer properties map to sanitize.
+     * @return a transformed producer properties map.
+     */
+    private static HashMap<String, Object> transformProducerPropertiesMap(
+        Map<String, String> producerPropertiesMap) {
+        HashMap<String, Object> transformedMap = new HashMap<>();
+
+        transformedMap.put(
+            "topicName",
+            System.getenv().getOrDefault(
+                "TOPIC_NAME",
+                producerPropertiesMap.get("topicName")
+            )
+        );
+
+        transformedMap.put(
+            "producerName",
+            System.getenv().getOrDefault(
+                "PRODUCER_NAME",
+                producerPropertiesMap.get("producerName")
+            )
+        );
+
+        transformedMap.put(
+            "sendTimeoutMs",
+            Long.parseLong(System.getenv().getOrDefault(
+                "SEND_TIMEOUT_MS",
+                producerPropertiesMap.get("sendTimeoutMs")
+            ))
+        );
+
+        transformedMap.put(
+            "blockIfQueueFull",
+            Boolean.parseBoolean(System.getenv().getOrDefault(
+                "BLOCK_IF_QUEUE_FULL",
+                producerPropertiesMap.get("blockIfQueueFull")
+            ))
+        );
+
+        transformedMap.put(
+            "maxPendingMessages",
+            Integer.parseInt(System.getenv().getOrDefault(
+                "MAX_PENDING_MESSAGES",
+                producerPropertiesMap.get("maxPendingMessages")
+            ))
+        );
+
+        transformedMap.put(
+            "maxPendingMessagesAcrossPartitions",
+            Integer.parseInt(System.getenv().getOrDefault(
+                "MAX_PENDING_MESSAGES_ACROSS_PARTITIONS",
+                producerPropertiesMap.get("maxPendingMessagesAcrossPartitions")
+            ))
+        );
+
+        transformedMap.put(
+            "messageRoutingMode",
+            MessageRoutingMode.valueOf(System.getenv().getOrDefault(
+                "MESSAGE_ROUTING_MODE",
+                producerPropertiesMap.get("messageRoutingMode")
+            ))
+        );
+
+        transformedMap.put(
+            "hashingScheme",
+            HashingScheme.valueOf(System.getenv().getOrDefault(
+                "HASHING_SCHEME",
+                producerPropertiesMap.get("hashingScheme")
+            ))
+        );
+
+        transformedMap.put(
+            "cryptoFailureAction",
+            ProducerCryptoFailureAction.valueOf(System.getenv().getOrDefault(
+                "CRYPTO_FAILURE_ACTION",
+                producerPropertiesMap.get("cryptoFailureAction")
+            ))
+        );
+
+        transformedMap.put("batchingMaxPublishDelayMicros",
+            TimeUnit.MILLISECONDS.toMicros(
+                Long.parseLong(System.getenv().getOrDefault(
+                    "BATCHING_MAX_PUBLISH_DELAY_MICROS",
+                    producerPropertiesMap.get("batchingMaxPublishDelayMicros")
+                ))
+            )
+        );
+
+        transformedMap.put(
+            "batchingMaxMessages",
+            Integer.parseInt(System.getenv().getOrDefault(
+                "BATCHING_MAX_MESSAGES",
+                producerPropertiesMap.get("batchingMaxMessages")
+            ))
+        );
+
+        transformedMap.put(
+            "batchingEnabled",
+            Boolean.parseBoolean(System.getenv().getOrDefault(
+                "BATCHING_ENABLED",
+                producerPropertiesMap.get("batchingEnabled")
+            ))
+        );
+
+        transformedMap.put(
+            "compressionType",
+            CompressionType.valueOf(System.getenv().getOrDefault(
+                "COMPRESSION_TYPE",
+                producerPropertiesMap.get("compressionType")
+            ))
+        );
+
+        return transformedMap;
+    }
 
     /**
      * Code adapted from:
@@ -55,163 +268,6 @@ public class PulsarProducer implements StreamsServer<String> {
     }
 
     /**
-     * Sanitizes the producer properties map of String, String to String, Object.
-     *
-     * @param producerPropertiesMap the producer properties map to sanitize.
-     * @return a sanitized producer properties map.
-     */
-    private static HashMap<String, Object> sanitizeProducerPropertiesMap(
-        Map<String, String> producerPropertiesMap) {
-        HashMap<String, Object> sanitizedMap = new HashMap<>();
-
-        sanitizedMap.put(
-            "topicName",
-            System.getenv().getOrDefault(
-                "TOPIC_NAME",
-                producerPropertiesMap.get("topicName")
-            )
-        );
-
-        sanitizedMap.put(
-            "producerName",
-            System.getenv().getOrDefault(
-                "PRODUCER_NAME",
-                producerPropertiesMap.get("producerName")
-            )
-        );
-
-        sanitizedMap.put(
-            "sendTimeoutMs",
-            Long.parseLong(System.getenv().getOrDefault(
-                "SEND_TIMEOUT_MS",
-                producerPropertiesMap.get("sendTimeoutMs")
-            ))
-        );
-
-        sanitizedMap.put(
-            "blockIfQueueFull",
-            Boolean.parseBoolean(System.getenv().getOrDefault(
-                "BLOCK_IF_QUEUE_FULL",
-                producerPropertiesMap.get("blockIfQueueFull")
-            ))
-        );
-
-        sanitizedMap.put(
-            "maxPendingMessages",
-            Integer.parseInt(System.getenv().getOrDefault(
-                "MAX_PENDING_MESSAGES",
-                producerPropertiesMap.get("maxPendingMessages")
-            ))
-        );
-
-        sanitizedMap.put(
-            "maxPendingMessagesAcrossPartitions",
-            Integer.parseInt(System.getenv().getOrDefault(
-                "MAX_PENDING_MESSAGES_ACROSS_PARTITIONS",
-                producerPropertiesMap.get("maxPendingMessagesAcrossPartitions")
-            ))
-        );
-
-        sanitizedMap.put(
-            "messageRoutingMode",
-            MessageRoutingMode.valueOf(System.getenv().getOrDefault(
-                "MESSAGE_ROUTING_MODE",
-                producerPropertiesMap.get("messageRoutingMode")
-            ))
-        );
-
-        sanitizedMap.put(
-            "hashingScheme",
-            HashingScheme.valueOf(System.getenv().getOrDefault(
-                "HASHING_SCHEME",
-                producerPropertiesMap.get("hashingScheme")
-            ))
-        );
-
-        sanitizedMap.put(
-            "cryptoFailureAction",
-            ProducerCryptoFailureAction.valueOf(System.getenv().getOrDefault(
-                "CRYPTO_FAILURE_ACTION",
-                producerPropertiesMap.get("cryptoFailureAction")
-            ))
-        );
-
-        sanitizedMap.put("batchingMaxPublishDelayMicros",
-            TimeUnit.MILLISECONDS.toMicros(
-                Long.parseLong(System.getenv().getOrDefault(
-                    "BATCHING_MAX_PUBLISH_DELAY_MICROS",
-                    producerPropertiesMap.get("batchingMaxPublishDelayMicros")
-                ))
-            )
-        );
-
-        sanitizedMap.put(
-            "batchingMaxMessages",
-            Integer.parseInt(System.getenv().getOrDefault(
-                "BATCHING_MAX_MESSAGES",
-                producerPropertiesMap.get("batchingMaxMessages")
-            ))
-        );
-
-        sanitizedMap.put(
-            "batchingEnabled",
-            Boolean.parseBoolean(System.getenv().getOrDefault(
-                "BATCHING_ENABLED",
-                producerPropertiesMap.get("batchingEnabled")
-            ))
-        );
-
-        sanitizedMap.put(
-            "compressionType",
-            CompressionType.valueOf(System.getenv().getOrDefault(
-                "COMPRESSION_TYPE",
-                producerPropertiesMap.get("compressionType")
-            ))
-        );
-
-        return sanitizedMap;
-    }
-
-    /**
-     * Initialize the Pulsar prototype producer.
-     *
-     * @return true if successful, false if else.
-     */
-    public boolean initialize() {
-        Properties configProperties;
-        Properties producerProperties;
-
-        configProperties = loadPropertiesFromFile(CONFIG_PROPERTIES);
-        producerProperties = loadPropertiesFromFile(PRODUCER_PROPERTIES);
-
-        final String host = System.getenv().getOrDefault("PULSAR_BROKER_URL",
-            configProperties.getProperty("pulsar.broker.url", "pulsar://127.0.0.1:6650")
-        );
-
-        final Map<String, String> producerPropertiesMap =
-            PulsarProducer.convertPropertiesToMap(producerProperties);
-        final Map<String, Object> sanitizedPropertiesMap =
-            PulsarProducer.sanitizeProducerPropertiesMap(producerPropertiesMap);
-
-        try {
-            logger.info("Establishing connection to {}", host);
-            this.pulsarClient = PulsarClient.builder()
-                .serviceUrl(host)
-                .build();
-
-            this.producer = this.pulsarClient.newProducer(Schema.STRING)
-                .loadConf(sanitizedPropertiesMap)
-                .create();
-
-        } catch (PulsarClientException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Send a message to a Pulsar broker through a record.
      *
      * @param message the message to send to the Pulsar broker.
@@ -223,10 +279,12 @@ public class PulsarProducer implements StreamsServer<String> {
     }
 
     /**
-     * Shutdown the Pulsar prototype producer.
+     * Shutdown the Pulsar producer.
      */
     @Override
     public void onShutdown() {
+        logger.info("Attempting to shut down the Pulsar producer");
+
         if (this.producer != null) {
             try {
                 this.producer.close();

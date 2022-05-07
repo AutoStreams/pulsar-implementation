@@ -27,19 +27,13 @@
         <dependency>
             <groupId>com.github.AutoStreams</groupId>
             <artifactId>utils</artifactId>
-            <version>v1.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.1.75.Final</version>
+            <version>v1.1.1</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.pulsar</groupId>
             <artifactId>pulsar-client</artifactId>
-            <version>2.9.1</version>
+            <version>2.10.0</version>
         </dependency>
     </dependencies>
 

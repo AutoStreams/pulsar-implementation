@@ -1,17 +1,37 @@
-package com.autostreams.pulsar;
+package com.autostreams.pulsar.receiver;
 
 import static com.autostreams.utils.fileutils.FileUtils.loadPropertiesFromFile;
 
+import com.autostreams.utils.datareceiver.DataReceiver;
+import com.autostreams.utils.datareceiver.StreamsServer;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PulsarProducerLoader {
+/**
+ * Class that can create a Data receiver from configuration variables.
+ */
+public class DataReceiverCreator {
+    private static int port;
+    private static final Logger logger = LoggerFactory.getLogger(DataReceiverCreator.class);
     private static final String LISTEN_PORT = "listen.port";
     private static final String CONFIG_PROPERTIES = "config.properties";
-    static int port;
-    private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
+    private DataReceiverCreator() {}
+
+    /**
+     * Creates a new DataReceiver from environment or properties configuration.
+     * Environment variables are prioritized over properties variables.
+     *
+     * @param streamsServer the streams' server which the data-receiver should send messages to.
+     * @return a newly created data receiver.
+     */
+    public static DataReceiver createReceiver(StreamsServer<String> streamsServer) {
+        loadConfigurationVariables();
+        printConfigurationVariables();
+
+        return new DataReceiver(streamsServer, port);
+    }
 
     /**
      * Prints the configuration variables.
@@ -50,7 +70,7 @@ public class PulsarProducerLoader {
     /**
      * Check if it is possible to load configuration from environment variables.
      *
-     * @return true if it is possible to load configuration from environment variables, false if else.
+     * @return true if it is possible to load configuration from environment, false if else.
      */
     private static boolean canLoadFromEnvironment() {
         return System.getenv().containsKey(LISTEN_PORT);
@@ -74,41 +94,4 @@ public class PulsarProducerLoader {
         port = Integer.parseInt((String) properties.get(LISTEN_PORT));
     }
 
-    /**
-     * Create a new Pulsar producer.
-     *
-     * @return the newly created Pulsar producer.
-     */
-    public static PulsarProducer createProducer() {
-        loadConfigurationVariables();
-        printConfigurationVariables();
-
-        PulsarProducer pulsarProducer = new PulsarProducer();
-        while (!pulsarProducer.initialize()) {
-            int secondsToSleep = 5;
-            logger.warn(
-                "Failed to initialize PulsarPrototypeProducer, retrying in {} seconds",
-                secondsToSleep
-            );
-
-            sleepForSeconds(secondsToSleep);
-        }
-
-        return pulsarProducer;
-    }
-
-    /**
-     * Sleep for a specified amount of time in seconds.
-     *
-     * @param seconds the seconds to sleep for.
-     */
-    private static void sleepForSeconds(int seconds) {
-        try {
-            TimeUnit.SECONDS.sleep(seconds);
-        } catch (InterruptedException e) {
-            logger.error("Unable to sleep");
-            e.printStackTrace();
-            Thread.currentThread().interrupt();
-        }
-    }
 }
