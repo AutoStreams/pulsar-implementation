@@ -215,31 +215,6 @@ public class PulsarProducer implements StreamsServer<String> {
             ))
         );
 
-        transformedMap.put("batchingMaxPublishDelayMicros",
-            TimeUnit.MILLISECONDS.toMicros(
-                Long.parseLong(System.getenv().getOrDefault(
-                    "BATCHING_MAX_PUBLISH_DELAY_MICROS",
-                    producerPropertiesMap.get("batchingMaxPublishDelayMicros")
-                ))
-            )
-        );
-
-        transformedMap.put(
-            "batchingMaxMessages",
-            Integer.parseInt(System.getenv().getOrDefault(
-                "BATCHING_MAX_MESSAGES",
-                producerPropertiesMap.get("batchingMaxMessages")
-            ))
-        );
-
-        transformedMap.put(
-            "batchingEnabled",
-            Boolean.parseBoolean(System.getenv().getOrDefault(
-                "BATCHING_ENABLED",
-                producerPropertiesMap.get("batchingEnabled")
-            ))
-        );
-
         transformedMap.put(
             "compressionType",
             CompressionType.valueOf(System.getenv().getOrDefault(
