@@ -39,7 +39,7 @@ public class PulsarProducer implements StreamsServer<String> {
     private Producer<String> producer;
 
     /**
-     * Initialize the Pulsar prototype producer.
+     * Initialize the Pulsar producer.
      */
     public void initialize() {
         String host = loadAndGetHostPropertyVariable();
