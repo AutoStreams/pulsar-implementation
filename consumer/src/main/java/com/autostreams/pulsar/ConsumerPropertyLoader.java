@@ -50,7 +50,7 @@ public class ConsumerPropertyLoader {
      * Sets keys for the .properties file and environment variables.
      */
     private void setConfigVariableKeys() {
-        this.addPropertyPair("topicNames", "TOPIC_NAMES");
+        this.addPropertyPair("topicName", "TOPIC_NAME");
         this.addPropertyPair("subscriptionName", "SUBSCRIPTION_NAME");
         this.addPropertyPair("consumerName", "CONSUMER_NAME");
         this.addPropertyPair("subscriptionType", "SUBSCRIPTION_TYPE");
