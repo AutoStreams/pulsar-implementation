@@ -49,6 +49,7 @@ public class ConsumerMaster implements StreamsServer<String> {
         for (int i = 0; i < consumerCount; i++) {
             ConsumerWorker cw = new ConsumerWorker();
             cw.initialize();
+
             workers.add(cw);
         }
     }

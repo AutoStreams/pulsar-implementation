@@ -44,7 +44,6 @@ public class ConsumerWorker implements Runnable {
             ioe.printStackTrace();
         }
         running = true;
-        this.start();
     }
 
     /**
