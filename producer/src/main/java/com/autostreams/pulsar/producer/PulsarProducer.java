@@ -84,7 +84,7 @@ public class PulsarProducer implements StreamsServer<String> {
         while (!establishConnection(host, producerProperties)) {
             int secondsToSleep = 5;
             logger.warn(
-                "Failed to initialize PulsarPrototypeProducer, retrying in {} seconds",
+                "Failed to initialize PulsarProducer, retrying in {} seconds",
                 secondsToSleep
             );
 
