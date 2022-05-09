@@ -9,7 +9,7 @@ RUN mvn -f /home/app/pom.xml clean package
 FROM gcr.io/distroless/java17-debian11
 COPY --from=build /home/app/target/pulsar-producer.jar /usr/local/lib/pulsar-producer.jar
 
-ENV PULSAR_BROKER_URL='broker-1:6650'
+ENV PULSAR_BROKER_URL='broker:6650'
 
 ENV TOPIC_NAME='Testtopic'
 ENV SEND_TIMEOUT_MS=30000

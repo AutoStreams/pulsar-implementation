@@ -19,7 +19,7 @@ public class ConsumerPropertyLoader {
     private final ArrayList<ConfigurationNamePair> configVariableKeys = new ArrayList<>();
     private final Set<String> topics = new HashSet<>();
     private static final String HOST_PROPERTY_VARIABLE_NAME = "url";
-    private static final String HOST_ENVIRONMENT_VARIABLE_NAME = "URL";
+    private static final String HOST_ENVIRONMENT_VARIABLE_NAME = "PULSAR_BROKER_URL";
 
     private record ConfigurationNamePair(String propertyVariableName,
                                          String environmentVariableName) {
@@ -50,7 +50,7 @@ public class ConsumerPropertyLoader {
      * Sets keys for the .properties file and environment variables.
      */
     private void setConfigVariableKeys() {
-        this.addPropertyPair("topicName", "TOPIC_NAME");
+        this.addPropertyPair("topicNames", "TOPIC_NAME");
         this.addPropertyPair("subscriptionName", "SUBSCRIPTION_NAME");
         this.addPropertyPair("consumerName", "CONSUMER_NAME");
         this.addPropertyPair("subscriptionType", "SUBSCRIPTION_TYPE");
