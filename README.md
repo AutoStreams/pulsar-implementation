@@ -31,3 +31,37 @@ To execute the built images, execute the command:
 ```bash
 docker compose -f docker-compose.yml -f broker/docker-compose.yml up
 ```
+### Build and run with Docker
+
+**Prerequisites**
+* Make sure you have downloaded [Docker](https://www.docker.com/) on your system.
+* Set the working directory as the root of this collection directory i.e. **`pulsar-implementation/`**
+
+To execute the Docker images, they must first be built then ran. The producer and consumer must be built separately.
+
+**Producer**
+* Navigate to the producer folder
+```bash
+cd producer
+```
+* Build the producer. It is recommended to tag it for ease of use, forexample with the tag "producer"
+```bash
+Docker build -t producer .
+```
+* Run the producer
+```bash
+Docker run producer
+```
+**Consumer**
+* Navigate to the consumer folder
+```bash
+cd consumer
+```
+* Build the consumer. It is recommended to tag it for ease of use, forexample with the tag "consumer"
+```bash
+Docker build -t consumer .
+```
+* Run the consumer
+```bash
+Docker run consumer
+```
