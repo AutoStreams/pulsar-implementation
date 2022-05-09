@@ -4,9 +4,9 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.autostreams</groupId>
-    <artifactId>parent-pulsar-prototype</artifactId>
+    <artifactId>parent-pulsar</artifactId>
     <version>0.1.0-SNAPSHOT</version>
-    <name>parent-pulsar-prototype</name>
+    <name>parent-pulsar</name>
 
     <packaging>pom</packaging>
 
