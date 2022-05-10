@@ -27,7 +27,7 @@ Runnable jar files will then be available in the target folder for each module. 
 ```bash
 java -jar <DIRECTORY-NAME>/target/<MODULE-NAME>.jar 
 ```
-Where <DIRECTORY-NAME> and <MODULE-NAME> are replaced by the name of the desired module.
+Where &lt;DIRECTORY-NAME&gt; and &lt;MODULE-NAME&gt; are replaced by the name of the desired module.
 
 Alternatively, each module have their own readme that can be referred to in order to build and run
 the modules.
