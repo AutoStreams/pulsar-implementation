@@ -7,12 +7,10 @@ First acquire this project by cloning the repository. Cloning this repository ca
 git clone https://github.com/AutoStreams/pulsar-implementation.git
 ```
 The next step is to change the working directory to be the root of the cloned repository, then init and update all submodules of this project recursively. This can be done by executing the commands:
-
 ```bash
-cd prototype-pulsar
+cd pulsar-implementation
 git submodule update --init --recursive
 ```
-
 All code and modules should now be available in your local repository.
 
 ### Build and run with Docker
