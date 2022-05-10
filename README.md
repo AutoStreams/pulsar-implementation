@@ -15,22 +15,6 @@ git submodule update --init --recursive
 
 All code and modules should now be available in your local repository.
 
-### Build and run docker-compose
-
-**Prerequisites**
-* Make sure you have downloaded [Docker](https://www.docker.com/) on your system.
-* Make sure [Docker Compose](https://docs.docker.com/compose/install/) is installed (Added by default with Docker Desktop for Windows)
-* Set the working directory as the root of this collection directory i.e. **`pulsar-implementation/`**
-
-To build the docker images, execute the command:
-```bash
-docker compose -f docker-compose.yml -f broker/docker-compose.yml build
-```
-
-To execute the built images, execute the command:
-```bash
-docker compose -f docker-compose.yml -f broker/docker-compose.yml up
-```
 ### Build and run with Docker
 
 **Prerequisites**
