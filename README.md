@@ -13,7 +13,12 @@ git submodule update --init --recursive
 ```
 All code and modules should now be available in your local repository.
 
-## Building all modules
+## Building all modules with Maven
+**Prerequisites**
+* Download the latest version of [Maven](https://maven.apache.org/).
+* Download a Java JDK of version 17
+* Set the working directory to the root of this project i.e. **`pulsar-implementation/`**
+
 To build the project, it is possible to use Maven to build from the root **`pulsar-implementation/`** folder.
 ```bash
 mvn package

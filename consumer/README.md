@@ -1,5 +1,5 @@
 ## About The Consumer
-Consumer is a Pulsar Consumer implementation intended to simulate multiple users polling data from a Pulsar stream.
+Consumer is a Pulsar Consumer implementation intended to simulate multiple end points subscribing to data from a Pulsar stream.
 ## Getting Started
 First acquire this project by cloning the repository. Cloning this repository can be done by downloading [Git](https://git-scm.com/) then executing the command:
 ```
