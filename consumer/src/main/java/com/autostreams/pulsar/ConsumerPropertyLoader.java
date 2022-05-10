@@ -50,7 +50,7 @@ public class ConsumerPropertyLoader {
      * Sets keys for the .properties file and environment variables.
      */
     private void setConfigVariableKeys() {
-        this.addPropertyPair("topicNames", "TOPIC_NAME");
+        this.addPropertyPair("topicNames", "TOPIC_NAMES");
         this.addPropertyPair("subscriptionName", "SUBSCRIPTION_NAME");
         this.addPropertyPair("consumerName", "CONSUMER_NAME");
         this.addPropertyPair("subscriptionType", "SUBSCRIPTION_TYPE");
@@ -161,7 +161,8 @@ public class ConsumerPropertyLoader {
 
     /**
      * Puts a variable to the provided result map. Special handling for the "topicNames" special
-     * case where the value in the result map must be a HashMap.
+     * case where the value in the result map must be a HashMap. In that case, the "topics" variable
+     * of the ConsumerPropertyLoader object will be used instead.
      *
      * @param propertyVariableName name of variable
      * @param configurationValue value of variable
