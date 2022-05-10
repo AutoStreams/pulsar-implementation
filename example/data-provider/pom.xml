@@ -13,7 +13,20 @@
     </properties>
     <name>pulsar-data-provider</name>
 
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
     <dependencies>
+        <dependency>
+            <groupId>com.github.AutoStreams</groupId>
+            <artifactId>utils</artifactId>
+            <version>v1.1.1</version>
+        </dependency>
+
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
