@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.autostreams</groupId>
     <artifactId>parent-pulsar</artifactId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>parent-pulsar</name>
 
     <packaging>pom</packaging>
@@ -66,6 +66,7 @@
     <modules>
         <module>producer</module>
         <module>consumer</module>
+        <module>example/data-provider</module>
     </modules>
 
 </project>

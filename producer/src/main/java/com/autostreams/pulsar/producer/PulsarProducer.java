@@ -84,7 +84,7 @@ public class PulsarProducer implements StreamsServer<String> {
         while (!establishConnection(host, producerProperties)) {
             int secondsToSleep = 5;
             logger.warn(
-                "Failed to initialize PulsarPrototypeProducer, retrying in {} seconds",
+                "Failed to initialize PulsarProducer, retrying in {} seconds",
                 secondsToSleep
             );
 
@@ -212,31 +212,6 @@ public class PulsarProducer implements StreamsServer<String> {
             ProducerCryptoFailureAction.valueOf(System.getenv().getOrDefault(
                 "CRYPTO_FAILURE_ACTION",
                 producerPropertiesMap.get("cryptoFailureAction")
-            ))
-        );
-
-        transformedMap.put("batchingMaxPublishDelayMicros",
-            TimeUnit.MILLISECONDS.toMicros(
-                Long.parseLong(System.getenv().getOrDefault(
-                    "BATCHING_MAX_PUBLISH_DELAY_MICROS",
-                    producerPropertiesMap.get("batchingMaxPublishDelayMicros")
-                ))
-            )
-        );
-
-        transformedMap.put(
-            "batchingMaxMessages",
-            Integer.parseInt(System.getenv().getOrDefault(
-                "BATCHING_MAX_MESSAGES",
-                producerPropertiesMap.get("batchingMaxMessages")
-            ))
-        );
-
-        transformedMap.put(
-            "batchingEnabled",
-            Boolean.parseBoolean(System.getenv().getOrDefault(
-                "BATCHING_ENABLED",
-                producerPropertiesMap.get("batchingEnabled")
             ))
         );
 
