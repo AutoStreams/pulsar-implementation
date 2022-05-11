@@ -11,8 +11,8 @@ import java.util.Set;
 /**
  * Represents an object responsible for handling and loading configurations for the consumer.
  *
- * @version 0.1
- * @since 0.1
+ * @version 1.0
+ * @since 1.0
  */
 public class ConsumerPropertyLoader {
     private static final String CONFIG_NAME = "consumerconfig.properties";
@@ -50,7 +50,7 @@ public class ConsumerPropertyLoader {
      * Sets keys for the .properties file and environment variables.
      */
     private void setConfigVariableKeys() {
-        this.addPropertyPair("topicNames", "TOPIC_NAME");
+        this.addPropertyPair("topicNames", "TOPIC_NAMES");
         this.addPropertyPair("subscriptionName", "SUBSCRIPTION_NAME");
         this.addPropertyPair("consumerName", "CONSUMER_NAME");
         this.addPropertyPair("subscriptionType", "SUBSCRIPTION_TYPE");
@@ -159,6 +159,15 @@ public class ConsumerPropertyLoader {
         return result;
     }
 
+    /**
+     * Puts a variable to the provided result map. Special handling for the "topicNames" special
+     * case where the value in the result map must be a HashMap. In that case, the "topics" variable
+     * of the ConsumerPropertyLoader object will be used instead.
+     *
+     * @param propertyVariableName name of variable
+     * @param configurationValue value of variable
+     * @param result map over variables and values
+     */
     private void putVariableToResult(String propertyVariableName,
                                      Object configurationValue,
                                      HashMap<String, Object> result) {

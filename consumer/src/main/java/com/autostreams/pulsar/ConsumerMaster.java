@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Class representing a Consumer Master, responsible for creating and controlling Consumer Workers.
  *
- * @version 0.1
+ * @version 1.0
  * @since 0.1
  */
 public class ConsumerMaster implements StreamsServer<String> {

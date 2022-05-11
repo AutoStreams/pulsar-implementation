@@ -6,7 +6,7 @@ RUN mvn -f /home/app/pom.xml clean package
 FROM gcr.io/distroless/java17-debian11
 
 ENV PULSAR_BROKER_URL='pulsar://broker:6650'
-ENV TOPIC_NAME='Testtopic'
+ENV TOPIC_NAMES='Testtopic'
 ENV SUBSCRIPTION_NAME='subscription'
 ENV SUBSCRIPTION_TYPE='Exclusive'
 ENV RECEIVER_QUEUE_SIZE=1000

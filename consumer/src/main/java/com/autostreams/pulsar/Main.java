@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  * Class containing main entry point of the consumer application.
  *
  * @version 1.0
- * @since 1.0
+ * @since 0.1
  */
 public class Main {
     private static final Logger logger = LoggerFactory.getLogger(Main.class);

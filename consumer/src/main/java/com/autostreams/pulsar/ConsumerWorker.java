@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Worker that contains the consumer, receiving data from a broker.
  *
- * @version 0.1
+ * @version 1.0
  * @since 0.1
  */
 public class ConsumerWorker implements Runnable {
