@@ -66,7 +66,7 @@ public class PulsarProducer implements StreamsServer<String> {
      * Load the producer properties from environment or the property configuration file.
      * Note: The environment variables are prioritized over the configuration file variables.
      *
-     * @return a string representing the host on the form "pulsar://[IP]:[PORT].
+     * @return a map of property keys to property values.
      */
     private static Map<String, Object> loadAndGetProducerPropertyVariables() {
         Properties producerProperties = loadPropertiesFromFile(PRODUCER_PROPERTIES);
