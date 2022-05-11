@@ -8,7 +8,7 @@ import com.autostreams.utils.datareceiver.DataReceiver;
 /**
  * The class containing the main entry point of the Pulsar producer application.
  *
- * @version 0.1
+ * @version 1.0
  * @since 0.1
  */
 public final class Main {

@@ -10,6 +10,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Class that can create a Data receiver from configuration variables.
+ *
+ * @version 1.0
+ * @since 1.0
  */
 public class DataReceiverCreator {
     private static int port;
