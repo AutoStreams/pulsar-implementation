@@ -11,8 +11,8 @@ import java.util.Set;
 /**
  * Represents an object responsible for handling and loading configurations for the consumer.
  *
- * @version 0.1
- * @since 0.1
+ * @version 1.0
+ * @since 1.0
  */
 public class ConsumerPropertyLoader {
     private static final String CONFIG_NAME = "consumerconfig.properties";
