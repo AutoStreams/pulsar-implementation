@@ -1,2 +1,4 @@
-com.autostreams.datareceiver
 com.autostreams.pulsar
+com.autostreams.pulsar.dataprovider
+com.autostreams.pulsar.producer
+com.autostreams.pulsar.receiver
